@@ -1,6 +1,6 @@
 const discord = require("discord.js");
 const { MessageActionRow, MessageButton } = require('discord.js');
-const { token, ticketChannelId } = require('./config.json');
+const { token, ticketChannelId, adminChannelId } = require('./config.json');
 
 const decx = new discord.Client({
 	intents: [
@@ -21,6 +21,11 @@ decx.on("ready", () => {
 	}), 6000 * 15);
 	decx.user.setStatus('dnd')
 	console.log("😍 " + decx.user.username + " started working!");
+});
+
+decx.on('guildMemberAdd', member => {
+    var role = decx.guild.roles.cache.find(role => role.id == "932834030716616776")
+    member.roles.add(role);
 });
 
 decx.on("messageCreate", async (msg) => {
@@ -46,7 +51,7 @@ decx.on("messageCreate", async (msg) => {
 	const embed = new discord.MessageEmbed()
 		.setColor('0000ff')
 		.setTitle('Criar ticket de atendimento')
-		.addField('☄️Detalhes', 'Ao criar um ticket você deve especificcar o motivo do chamado, seja para dúvidas, compras ou suporte.', true)
+		.addField('☄️ Detalhes', 'Ao criar um ticket você deve especificar o motivo do chamado, seja para dúvidas, compras ou suporte.', true)
 		.setImage('https://cdn.discordapp.com/attachments/747447582984503320/932760994663510076/Component_2.png')
 		.setAuthor({ name: 'Decx', iconURL: 'https://cdn.discordapp.com/attachments/929573302098362399/929820602779435078/Component_1.png', url: 'https://discord.com/invite/dX5RtYepjp' })
 		.setURL('https://discord.com/invite/dX5RtYepjp')
@@ -63,7 +68,7 @@ decx.on('interactionCreate', interaction => {
 	const interactionUser = decx.users.cache.get(interaction.member.user.id);
 	const interactionChannelName = `ticket-${interaction.user.username}`;
 	const guild = decx.guilds.cache.get(interaction.guild.id);
-	const adminAlertChannel = decx.channels.cache.find(channel => channel.id === "932778757251539025");
+	const adminAlertChannel = decx.channels.cache.find(channel => channel.id === adminChannelId);
 	const guildChannels = guild.channels.cache;
 	var guildChannelsName = [];
 	const errorEmbed = new discord.MessageEmbed()
@@ -74,7 +79,7 @@ decx.on('interactionCreate', interaction => {
 
 	const sucessEmbed = new discord.MessageEmbed()
 		.setTitle("✅ Ticket criado com sucesso!")
-		.setDescription('👉 Você foi mencionado no canal correspondete ao seu ticket.')
+		.setDescription('👉 Você foi mencionado no canal correspondente ao seu ticket.')
 		.setColor("0000ff")
 		.setFooter({ text: 'Decx Team - All Copyright reserved for © Decx ', iconURL: 'https://cdn.discordapp.com/attachments/929573302098362399/929820602779435078/Component_1.png' });
 

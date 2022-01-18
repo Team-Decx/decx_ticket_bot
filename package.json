@@ -1,5 +1,5 @@
 {
-  "name": "Decx Ticket Bot",
+  "name": "Decx-2",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
@@ -7,13 +7,13 @@
     "start": "node ."
   },
   "keywords": [],
-  "author": "Decx Team",
-  "license": "MIT",
+  "author": "",
+  "license": "ISC",
   "dependencies": {
     "discord.js": "^13.6.0"
   },
   "devDependencies": {
     "node": "^16.13.2"
   },
-  "description": "A Ticket System Bot Made With DiscordJS V 13"
+  "description": ""
 }
