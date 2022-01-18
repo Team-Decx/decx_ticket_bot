@@ -1,5 +1,6 @@
 {
 	"token": "XXXX",
 	"ticketChannelId": "XXXX",
-	"adminChannelId": "XXXX"
+	"adminChannelId": "XXXX",
+	"ticketPrefix": "@ticket"
 }

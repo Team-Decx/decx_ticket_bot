@@ -1,6 +1,6 @@
 const discord = require("discord.js");
 const { MessageActionRow, MessageButton } = require('discord.js');
-const { token, ticketChannelId, adminChannelId } = require('./config.json');
+const { token, ticketChannelId, adminChannelId, ticketPrefix } = require('./config.json');
 
 const decx = new discord.Client({
 	intents: [
@@ -32,7 +32,7 @@ decx.on("messageCreate", async (msg) => {
 	if (msg.author.bot) return;
 	if (msg.channel.type === "dm") return;
 
-	const prefix = '@ticket';
+	const prefix = ticketPrefix;
 
 	if (!msg.content.startsWith(prefix)) return;
 	const args = msg.content.toLowerCase().split(" ");
@@ -42,7 +42,7 @@ decx.on("messageCreate", async (msg) => {
 	const row = new discord.MessageActionRow()
 		.addComponents(
 			new MessageButton()
-				.setCustomId('primary')
+				.setCustomId('ticket')
 				.setLabel('Criar Ticket')
 				.setEmoji('932520038030770196')
 				.setStyle('SECONDARY'),
@@ -63,14 +63,13 @@ decx.on("messageCreate", async (msg) => {
 
 decx.on('interactionCreate', interaction => {
 	const protocol = new Date().getTime();
-	if(interaction.customId === "primary") {
-		if (!interaction.isButton()) return;
+	if(interaction.customId === "ticket") {
+	if (!interaction.isButton()) return;
 	const interactionUser = decx.users.cache.get(interaction.member.user.id);
 	const interactionChannelName = `ticket-${interaction.user.username}`;
 	const guild = decx.guilds.cache.get(interaction.guild.id);
 	const adminAlertChannel = decx.channels.cache.find(channel => channel.id === adminChannelId);
 	const guildChannels = guild.channels.cache;
-	var guildChannelsName = [];
 	const errorEmbed = new discord.MessageEmbed()
 		.setTitle("❌ Você já possui um ticket aberto!")
 		.setDescription('👉 Encerre o ticket atual para poder abrir um novo.')
@@ -84,7 +83,6 @@ decx.on('interactionCreate', interaction => {
 		.setFooter({ text: 'Decx Team - All Copyright reserved for © Decx ', iconURL: 'https://cdn.discordapp.com/attachments/929573302098362399/929820602779435078/Component_1.png' });
 
 	for (const channel of guildChannels.values()) {
-		guildChannelsName.push(channel.name);
 		if (channel.name === interactionChannelName.toLowerCase()) {
 			interaction.reply({ ephemeral: true, embeds: [errorEmbed] });
 			return;
