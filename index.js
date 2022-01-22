@@ -1,6 +1,6 @@
 const discord = require("discord.js");
 const { MessageActionRow, MessageButton } = require('discord.js');
-const { token, ticketChannelId, adminChannelId, ticketPrefix } = require('./config.json');
+const { ticketChannelId, adminChannelId, ticketPrefix } = require('./config.json');
 
 const decx = new discord.Client({
 	intents: [
@@ -23,13 +23,9 @@ decx.on("ready", () => {
 	console.log("😍 " + decx.user.username + " started working!");
 });
 
-decx.on('guildMemberAdd', member => {
-    var role = decx.guild.roles.cache.find(role => role.id == "932834030716616776")
-    member.roles.add(role);
-});
-
 decx.on("messageCreate", async (msg) => {
 	if (msg.author.bot) return;
+	if(!msg.author.hasPermission("ADMINISTRATOR")) return;
 	if (msg.channel.type === "dm") return;
 
 	const prefix = ticketPrefix;
@@ -144,4 +140,4 @@ decx.on('interactionCreate', interaction => {
 	}
 });
 
-decx.login(token);
+decx.login(process.env.token);
