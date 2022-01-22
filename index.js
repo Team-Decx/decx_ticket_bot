@@ -25,7 +25,7 @@ decx.on("ready", () => {
 
 decx.on("messageCreate", async (msg) => {
 	if (msg.author.bot) return;
-	if(!msg.author.hasPermission("ADMINISTRATOR")) return;
+	if(!msg.member.hasPermission('ADMINISTRATOR')) return;
 	if (msg.channel.type === "dm") return;
 
 	const prefix = ticketPrefix;
