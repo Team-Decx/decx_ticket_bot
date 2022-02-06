@@ -129,7 +129,7 @@ decx.on('interactionCreate', interaction => {
 	}
 	if (interaction.customId === "delete") {
 		interaction.channel.delete();
-
+		const adminAlertChannel = decx.channels.cache.find(channel => channel.id === adminChannelId);
 		const deleteMessage = new discord.MessageEmbed()
 			.setTitle("❌ Ticket encerrado!")
 			.setDescription(`💾PROTOCOLO: ${interaction.user.id}/${protocol}`)
