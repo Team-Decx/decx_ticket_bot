@@ -25,7 +25,7 @@ decx.on("ready", () => {
 
 decx.on("messageCreate", async (msg) => {
 	if (msg.author.bot) return;
-	if(!msg.member.permissions.has('ADMINISTRATOR')) return;
+	if (!msg.member.permissions.has('ADMINISTRATOR')) return;
 	if (msg.channel.type === "dm") return;
 
 	const prefix = ticketPrefix;
@@ -33,7 +33,7 @@ decx.on("messageCreate", async (msg) => {
 	if (!msg.content.startsWith(prefix)) return;
 	const args = msg.content.toLowerCase().split(" ");
 
-	const ticketChannel = decx.channels.cache.find(channel => channel.id ===  ticketChannelId);
+	const ticketChannel = decx.channels.cache.find(channel => channel.id === ticketChannelId);
 
 	const row = new discord.MessageActionRow()
 		.addComponents(
@@ -59,84 +59,88 @@ decx.on("messageCreate", async (msg) => {
 
 decx.on('interactionCreate', interaction => {
 	const protocol = new Date().getTime();
-	if(interaction.customId === "ticket") {
-	if (!interaction.isButton()) return;
-	const interactionUser = decx.users.cache.get(interaction.member.user.id);
-	const interactionChannelName = `ticket-${interaction.user.username}`;
-	const guild = decx.guilds.cache.get(interaction.guild.id);
-	const adminAlertChannel = decx.channels.cache.find(channel => channel.id === adminChannelId);
-	const guildChannels = guild.channels.cache;
-	const errorEmbed = new discord.MessageEmbed()
-		.setTitle("❌ Você já possui um ticket aberto!")
-		.setDescription('👉 Encerre o ticket atual para poder abrir um novo.')
-		.setColor("0000ff")
-		.setFooter({ text: 'Decx Team - All Copyright reserved for © Decx ', iconURL: 'https://cdn.discordapp.com/attachments/929573302098362399/929820602779435078/Component_1.png' });
-
-	const sucessEmbed = new discord.MessageEmbed()
-		.setTitle("✅ Ticket criado com sucesso!")
-		.setDescription('👉 Você foi mencionado no canal correspondente ao seu ticket.')
-		.setColor("0000ff")
-		.setFooter({ text: 'Decx Team - All Copyright reserved for © Decx ', iconURL: 'https://cdn.discordapp.com/attachments/929573302098362399/929820602779435078/Component_1.png' });
-
-	for (const channel of guildChannels.values()) {
-		if (channel.name === interactionChannelName.toLowerCase()) {
-			interaction.reply({ ephemeral: true, embeds: [errorEmbed] });
-			return;
-		}
-	}
-
-	const adminMessage = new discord.MessageEmbed()
-		.setTitle("☄️ Um ticket foi aberto!")
-		.setDescription(`💾PROTOCOLO: ${interaction.user.id}/${protocol}`)
-		.addField('😀 Usuário:', `${interaction.user.username}`, true)
-		.setColor("0000ff")
-		.setFooter({ text: 'Decx Team - All Copyright reserved for © Decx ', iconURL: 'https://cdn.discordapp.com/attachments/929573302098362399/929820602779435078/Component_1.png' });
-
-	adminAlertChannel.send({ ephemeral: true, embeds: [adminMessage] });
-
-	guild.channels.create(`ticket-${interaction.user.username}`, {
-		permissionOverwrites: [
-			{
-				id: interaction.user.id,
-				allow: ["SEND_MESSAGES", "VIEW_CHANNEL"]
-			},
-			{
-				id: interaction.guild.roles.everyone,
-				deny: ["VIEW_CHANNEL"]
-			}
-		],
-		type: 'text'
-	}).then(async channel => {
-		channel.send(`<@${interaction.user.id}>`);
-		const embed = new discord.MessageEmbed()
-			.setTitle("☄️ Você solicitou um ticket.")
-			.setDescription("Entraremos em contato o mais rápido possível, aguarde. Clique no botão vermelho para encerrar o ticket.")
+	if (interaction.customId === "ticket") {
+		if (!interaction.isButton()) return;
+		const interactionUser = decx.users.cache.get(interaction.member.user.id);
+		const interactionChannelName = `ticket-${interaction.user.username}`;
+		const guild = decx.guilds.cache.get(interaction.guild.id);
+		const adminAlertChannel = decx.channels.cache.find(channel => channel.id === adminChannelId);
+		const guildChannels = guild.channels.cache;
+		const errorEmbed = new discord.MessageEmbed()
+			.setTitle("❌ Você já possui um ticket aberto!")
+			.setDescription('👉 Encerre o ticket atual para poder abrir um novo.')
 			.setColor("0000ff")
 			.setFooter({ text: 'Decx Team - All Copyright reserved for © Decx ', iconURL: 'https://cdn.discordapp.com/attachments/929573302098362399/929820602779435078/Component_1.png' });
 
-		const deleteButton = new discord.MessageActionRow()
-			.addComponents(
-				new MessageButton()
-					.setCustomId('delete')
-					.setLabel('Cancelar Ticket')
-					.setEmoji('✖️')
-					.setStyle('DANGER'),
-			);
+		const sucessEmbed = new discord.MessageEmbed()
+			.setTitle("✅ Ticket criado com sucesso!")
+			.setDescription('👉 Você foi mencionado no canal correspondente ao seu ticket.')
+			.setColor("0000ff")
+			.setFooter({ text: 'Decx Team - All Copyright reserved for © Decx ', iconURL: 'https://cdn.discordapp.com/attachments/929573302098362399/929820602779435078/Component_1.png' });
 
-		const sent = await channel.send({ ephemeral: true, embeds: [embed], components: [deleteButton] });
-		interaction.reply({ ephemeral: true, embeds: [sucessEmbed] });
-	})
+		for (const channel of guildChannels.values()) {
+			if (channel.name === interactionChannelName.toLowerCase()) {
+				interaction.reply({ ephemeral: true, embeds: [errorEmbed] });
+				return;
+			}
+		}
+
+		const adminMessage = new discord.MessageEmbed()
+			.setTitle("☄️ Um ticket foi aberto!")
+			.setDescription(`💾PROTOCOLO: ${interaction.user.id}/${protocol}`)
+			.addField('😀 Usuário:', `${interaction.user.username}`, true)
+			.setColor("0000ff")
+			.setFooter({ text: 'Decx Team - All Copyright reserved for © Decx ', iconURL: 'https://cdn.discordapp.com/attachments/929573302098362399/929820602779435078/Component_1.png' });
+
+		adminAlertChannel.send({ ephemeral: true, embeds: [adminMessage] });
+
+		guild.channels.create(`ticket-${interaction.user.username}`, {
+			permissionOverwrites: [
+				{
+					id: interaction.user.id,
+					allow: ["SEND_MESSAGES", "VIEW_CHANNEL"]
+				},
+				{
+					id: interaction.guild.roles.everyone,
+					deny: ["VIEW_CHANNEL"]
+				}
+			],
+			type: 'text'
+		}).then(async channel => {
+			channel.send(`<@${interaction.user.id}>`);
+			const embed = new discord.MessageEmbed()
+				.setTitle("☄️ Você solicitou um ticket.")
+				.setDescription("Entraremos em contato o mais rápido possível, aguarde. Clique no botão vermelho para encerrar o ticket.")
+				.setColor("0000ff")
+				.setFooter({ text: 'Decx Team - All Copyright reserved for © Decx ', iconURL: 'https://cdn.discordapp.com/attachments/929573302098362399/929820602779435078/Component_1.png' });
+
+			const deleteButton = new discord.MessageActionRow()
+				.addComponents(
+					new MessageButton()
+						.setCustomId('delete')
+						.setLabel('Cancelar Ticket')
+						.setEmoji('✖️')
+						.setStyle('DANGER'),
+				);
+
+			const sent = await channel.send({ ephemeral: true, embeds: [embed], components: [deleteButton] });
+			interaction.reply({ ephemeral: true, embeds: [sucessEmbed] });
+		})
 	}
-	if(interaction.customId === "delete") {
+	if (interaction.customId === "delete") {
 		interaction.channel.delete();
 
 		const deleteMessage = new discord.MessageEmbed()
-		.setTitle("❌ Seu ticket foi encerrado com sucesso!")
-		.setDescription(`💾PROTOCOLO: ${interaction.user.id}/${protocol}`)
-		.setColor("0000ff")
-		.setFooter({ text: 'Decx Team - All Copyright reserved for © Decx ', iconURL: 'https://cdn.discordapp.com/attachments/929573302098362399/929820602779435078/Component_1.png' });
+			.setTitle("❌ Ticket foi encerrado!")
+			.setDescription(`💾PROTOCOLO: ${interaction.user.id}/${protocol}`)
+			.setColor("0000ff")
+			.setFooter({ text: 'Decx Team - All Copyright reserved for © Decx ', iconURL: 'https://cdn.discordapp.com/attachments/929573302098362399/929820602779435078/Component_1.png' });
 
-		interaction.user.send({ ephemeral: true, embeds: [deleteMessage] })
+		try {
+			interaction.user.send({ ephemeral: true, embeds: [deleteMessage] });
+		} catch (err) {
+			adminAlertChannel.send({ ephemeral: true, embeds: [deleteMessage] });
+		}
 	}
 });
 
