@@ -131,7 +131,7 @@ decx.on('interactionCreate', interaction => {
 		interaction.channel.delete();
 
 		const deleteMessage = new discord.MessageEmbed()
-			.setTitle("❌ Ticket foi encerrado!")
+			.setTitle("❌ Ticket encerrado!")
 			.setDescription(`💾PROTOCOLO: ${interaction.user.id}/${protocol}`)
 			.setColor("0000ff")
 			.setFooter({ text: 'Decx Team - All Copyright reserved for © Decx ', iconURL: 'https://cdn.discordapp.com/attachments/929573302098362399/929820602779435078/Component_1.png' });
