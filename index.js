@@ -52,7 +52,7 @@ decx.on('messageCreate', async (msg) => {
 		.setDescription('Para dúvidas, suporte, contato profissional, orçamentos e compras.')
 		.setFooter({ text: 'Decx Team - All Copyright reserved for © Decx ', iconURL: 'https://cdn.discordapp.com/attachments/929573302098362399/929820602779435078/Component_1.png' });
 
-	await ticketChannel.send({ ephemeral: true, embeds: [embed], components: [row] });
+	ticketChannel.send({ ephemeral: true, embeds: [embed], components: [row] });
 });
 
 decx.on('interactionCreate', async interaction => {
