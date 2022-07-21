@@ -21,9 +21,6 @@ decx.on('ready', () => {
 	];
 	i = 0;
 	decx.user.setActivity(status[0]);
-	setInterval(() => decx.user.setActivity(`${status[i++ % status.length]}`, {
-		type: 'PLAYING',
-	}), 1000 * 60 * 15);
 	decx.user.setStatus('online');
 	console.log('😍 ' + decx.user.username + ' started working!');
 });
