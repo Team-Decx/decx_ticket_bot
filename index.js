@@ -21,6 +21,9 @@ decx.on('ready', () => {
 	];
 	i = 0;
 	decx.user.setActivity(status[0]);
+	setInterval(() => decx.user.setActivity(`${status[i++ % status.length]}`, {
+		type: 'PLAYING',
+	}), 1000 * 60 * 15);
 	decx.user.setStatus('online');
 	console.log('😍 ' + decx.user.username + ' started working!');
 });
@@ -59,7 +62,8 @@ decx.on('interactionCreate', async interaction => {
 		if (!interaction.isButton()) return;
 		const guild = decx.guilds.cache.get(interaction.guild.id);
 		const guildChannels = guild.channels.cache;
-		const interactionChannelName = `ticket-${interaction.user.username}`;
+		const userFirstName = interaction.user.username.split(' ')[0].toLowerCase();
+		const interactionChannelName = `ticket-${userFirstName}`;
 		const adminAlertChannel = decx.channels.cache.find(channel => channel.id === adminChannelId);
 		const errorEmbed = new discord.EmbedBuilder()
 			.setDescription('❌ Você já possui um ticket aberto! Encerre o ticket atual para poder abrir um novo.')
@@ -84,8 +88,10 @@ decx.on('interactionCreate', async interaction => {
 			.setFooter({ text: 'Decx © 2022', iconURL: 'https://cdn.discordapp.com/attachments/929573302098362399/999093804034445442/Logo_4.png' });
 
 		for (const channel of guildChannels.values()) {
-			if (channel.name === interactionChannelName.toLowerCase()) {
-				return interaction.reply({ ephemeral: true, embeds: [errorEmbed] });
+			if(channel.name.startsWith('ticket')) {
+				if(channel.topic === interaction.user.id) {
+					return interaction.reply({ ephemeral: true, embeds: [errorEmbed] });
+				}
 			}
 		}
 
@@ -105,8 +111,8 @@ decx.on('interactionCreate', async interaction => {
 			],
 			type: discord.ChannelType.GuildText,
 			//parent: 'xxx',
-			//SE QUISER COLOCAR O CANAL EM CATEGORIA TROCA O XXX pelo ID DA CATEGORIA
 		}).then(async channel => {
+			channel.setTopic(interaction.user.id);
 			const embed = new discord.EmbedBuilder()
 				.setDescription('☄️ Você solicitou um ticket. Entraremos em contato o mais rápido possível, aguarde. Clique no botão vermelho para encerrar o ticket.')
 				.setColor('#2f3136')
