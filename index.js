@@ -105,6 +105,7 @@ decx.on('interactionCreate', async interaction => {
 			],
 			type: discord.ChannelType.GuildText,
 			//parent: 'xxx',
+			//SE QUISER COLOCAR O CANAL EM CATEGORIA TROCA O XXX pelo ID DA CATEGORIA
 		}).then(async channel => {
 			const embed = new discord.EmbedBuilder()
 				.setDescription('☄️ Você solicitou um ticket. Entraremos em contato o mais rápido possível, aguarde. Clique no botão vermelho para encerrar o ticket.')
